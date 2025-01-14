@@ -140,7 +140,7 @@ impl PgConnection {
             transaction_status,
             transaction_depth: 0,
             pending_ready_for_query_count: 0,
-            next_statement_id: StatementId::NAMED_START,
+            next_statement_id: StatementId::NAMED_START.next(),
             cache_statement: StatementCache::new(options.statement_cache_capacity),
             cache_type_oid: HashMap::new(),
             cache_type_info: HashMap::new(),

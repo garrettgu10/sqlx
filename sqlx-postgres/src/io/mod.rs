@@ -1,5 +1,7 @@
 mod buf_mut;
 
+use rand::Rng;
+
 pub use buf_mut::PgBufMutExt;
 use std::fmt;
 use std::fmt::{Display, Formatter};
@@ -98,10 +100,13 @@ impl IdInner {
 
     #[inline(always)]
     fn next(&self) -> Self {
-        Self(
-            self.0
-                .map(|id| id.checked_add(1).unwrap_or(NonZeroU32::MIN)),
-        )
+        let mut rng = rand::thread_rng();
+
+        let num: NonZeroU32 = rng.gen();
+
+        println!("Generated IdInner {}", num);
+
+        Self(Some(num))
     }
 
     #[inline(always)]
