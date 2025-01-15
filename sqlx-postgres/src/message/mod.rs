@@ -209,6 +209,9 @@ pub struct EncodeMessage<F>(pub F);
 
 impl<F: FrontendMessage> ProtocolEncode<'_, ()> for EncodeMessage<F> {
     fn encode_with(&self, buf: &mut Vec<u8>, _context: ()) -> Result<(), Error> {
+        if F::FORMAT == FrontendMessageFormat::Close {
+            return Ok(())
+        }
         let mut size_hint = self.0.body_size_hint();
         // plus format code and length prefix
         size_hint += 5;

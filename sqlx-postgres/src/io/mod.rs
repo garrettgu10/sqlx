@@ -5,7 +5,7 @@ use rand::Rng;
 pub use buf_mut::PgBufMutExt;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use std::num::{NonZeroU32, Saturating};
+use std::num::{NonZeroU128, Saturating};
 
 pub(crate) use sqlx_core::io::*;
 
@@ -16,11 +16,11 @@ pub(crate) struct StatementId(IdInner);
 pub(crate) struct PortalId(IdInner);
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
-struct IdInner(Option<NonZeroU32>);
+struct IdInner(Option<NonZeroU128>);
 
 pub(crate) struct DisplayId {
     prefix: &'static str,
-    id: NonZeroU32,
+    id: NonZeroU128,
 }
 
 impl StatementId {
@@ -93,16 +93,16 @@ impl PortalId {
 impl IdInner {
     const UNNAMED: Self = Self(None);
 
-    const NAMED_START: Self = Self(Some(NonZeroU32::MIN));
+    const NAMED_START: Self = Self(Some(NonZeroU128::MIN));
 
     #[cfg(test)]
-    pub const TEST_VAL: Self = Self(NonZeroU32::new(1234567890));
+    pub const TEST_VAL: Self = Self(NonZeroU128::new(1234567890));
 
     #[inline(always)]
     fn next(&self) -> Self {
         let mut rng = rand::thread_rng();
 
-        let num: NonZeroU32 = rng.gen();
+        let num: NonZeroU128 = rng.gen();
 
         println!("Generated IdInner {}", num);
 
